@@ -1,10 +1,11 @@
 import { ElementRef, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 export declare class SplitPaneComponent implements OnChanges {
     primaryComponent: ElementRef;
     secondaryComponent: ElementRef;
     initialRatio: number;
     primaryMinSize: number;
-    primaryInitSize?: number;
+    refreshObserver?: Observable<void>;
     secondaryMinSize: number;
     separatorThickness: number;
     primaryToggledOff: boolean;
@@ -17,6 +18,7 @@ export declare class SplitPaneComponent implements OnChanges {
     dividerSize: number;
     isResizing: boolean;
     ngAfterViewInit(): void;
+    private refresh();
     ngOnChanges(changes: SimpleChanges): void;
     getTotalSize(): number;
     getPrimarySize(): number;
