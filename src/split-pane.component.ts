@@ -48,6 +48,7 @@ export class SplitPaneComponent implements OnChanges {
     }
 
     private refresh() {
+        console.log('Actualisation du composant split-pane.component.ts');
         this.checkBothToggledOff();
 
         if (!this.primaryToggledOff && !this.secondaryToggledOff) {
