@@ -1,7 +1,15 @@
 import {
-    Component, ViewChild, ElementRef, HostListener, EventEmitter, Input,
-    Output, OnChanges, SimpleChanges
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnChanges,
+    Output,
+    SimpleChanges,
+    ViewChild
 } from '@angular/core';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
     selector: 'split-pane',
@@ -15,7 +23,7 @@ export class SplitPaneComponent implements OnChanges {
 
     @Input('primary-component-initialratio') initialRatio: number = 0.5;
     @Input('primary-component-minsize') primaryMinSize: number = 0;
-    @Input('primary-component-init-size') primaryInitSize?: number;
+    @Input('refresh-observer') refreshObserver?: Observable<void>;
     @Input('secondary-component-minsize') secondaryMinSize: number = 0;
     @Input('separator-thickness') separatorThickness: number = 7;
     @Input('primary-component-toggled-off') primaryToggledOff: boolean = false;
@@ -30,6 +38,16 @@ export class SplitPaneComponent implements OnChanges {
     isResizing: boolean = false;
 
     ngAfterViewInit() {
+        if (this.refreshObserver) {
+            this.refreshObserver.subscribe(() => {
+                this.refresh();
+            });
+        }
+
+        this.refresh();
+    }
+
+    private refresh() {
         this.checkBothToggledOff();
 
         if (!this.primaryToggledOff && !this.secondaryToggledOff) {
@@ -41,12 +59,7 @@ export class SplitPaneComponent implements OnChanges {
                 }
             }
 
-            let size: number;
-            if (this.primaryInitSize && this.primaryInitSize >= this.primaryMinSize) {
-                size = this.primaryInitSize;
-            } else {
-                size = ratio * this.getTotalSize();
-            }
+            const size = ratio * this.getTotalSize();
             this.applySizeChange(size);
         }
     }
